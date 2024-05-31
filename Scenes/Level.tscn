@@ -1,7 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://cjx42wwe3f7l4"]
+[gd_scene load_steps=11 format=3 uid="uid://cjx42wwe3f7l4"]
 
+[ext_resource type="Script" path="res://Scenes/Level.gd" id="1_2g0ox"]
 [ext_resource type="MeshLibrary" uid="uid://tbx6re0bcqpi" path="res://MeshLibraries/SpaceLibrary.tres" id="1_mcuil"]
 [ext_resource type="PackedScene" uid="uid://firshqnvynb7" path="res://Enemy/enemy_1.tscn" id="2_je46c"]
+[ext_resource type="PackedScene" uid="uid://bwaytonnvli6p" path="res://Scenes/ray_picker_camera.tscn" id="2_wim5m"]
+[ext_resource type="PackedScene" uid="uid://s4u8d4onoed" path="res://Scenes/base.tscn" id="3_hgtxp"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_74nt1"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -27,6 +30,7 @@ _data = {
 point_count = 5
 
 [node name="Level" type="Node3D"]
+script = ExtResource("1_2g0ox")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_824g6")
@@ -40,8 +44,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 size = Vector3(100, 2, 100)
 material = SubResource("StandardMaterial3D_382yv")
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.374607, 0.927184, 0, -0.927184, 0.374607, -0.925, 19.049, 5.571)
+[node name="RayPickerCamera" parent="." instance=ExtResource("2_wim5m")]
 
 [node name="GridMap" type="GridMap" parent="."]
 mesh_library = ExtResource("1_mcuil")
@@ -94,4 +97,16 @@ path_u_distance = 1.0
 path_joined = false
 
 [node name="Enemy_1" parent="Path3D" instance=ExtResource("2_je46c")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -24, 0, 2)
+transform = Transform3D(-4.37113e-08, 0, -0.999999, 0, 1, 0, 0.999999, 0, -4.37113e-08, -24, 0, 2)
+
+[node name="Base" parent="." instance=ExtResource("3_hgtxp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.92451, 0, -10.5179)
+
+[node name="WaitTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="SpawnTimer" type="Timer" parent="."]
+
+[connection signal="timeout" from="WaitTimer" to="." method="_on_wait_timer_timeout"]
+[connection signal="timeout" from="SpawnTimer" to="." method="_on_spawn_timer_timeout"]
